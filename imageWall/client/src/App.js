@@ -9,6 +9,18 @@ function App() {
   const user = useUser();
   const supabase = useSupabaseClient();
 
+  async function magicLinkLogin() {
+    const { data, error } = await supabase.auth.signInWithOtp({
+      email: email,
+    });
+    if (error) {
+      alert('Error communicating with Supabase - USE REAL EMAIL ADDRESS !');
+      console.log(error);
+    } else {
+      alert('Check email for Supbase Magic Link :)');
+    }
+  }
+
   return (
     <Container align="center" className="container-sm mt-4">
       {user === null ? (
@@ -17,7 +29,7 @@ function App() {
           <Form>
             <Form.Group className="mb-3" style={{ maxWidth: '500px' }}>
               <Form.Label>
-                Enter an Email to sign in with Supbase Magic Link
+                Enter an Email to sign in with Supabase Magic Link
               </Form.Label>
               <Form.Control
                 type="email"
@@ -25,7 +37,9 @@ function App() {
                 onChange={(e) => setEmail(e.target.value)}
               ></Form.Control>
             </Form.Group>
-            <Button variant="primary">Get Magic Link</Button>
+            <Button variant="primary" onClick={() => magicLinkLogin()}>
+              Get Magic Link
+            </Button>
           </Form>
         </>
       ) : (
