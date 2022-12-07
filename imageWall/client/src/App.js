@@ -40,8 +40,20 @@ function App() {
     if (user) {
       getImages();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
+  async function deleteImage(imageName) {
+    const { error } = await supabase.storage
+      .from('images')
+      .remove([user.id + '/' + imageName]);
+
+    if (error) {
+      alert(error);
+    } else {
+      getImages();
+    }
+  }
 
   async function magicLinkLogin() {
     const { data, error } = await supabase.auth.signInWithOtp({
@@ -119,7 +131,12 @@ function App() {
                       src={CDNURL + user.id + '/' + image.name}
                     />
                     <Card.Body>
-                      <Button variant="danger">Delete Image</Button>
+                      <Button
+                        variant="danger"
+                        onClick={() => deleteImage(image.name)}
+                      >
+                        Delete Image
+                      </Button>
                     </Card.Body>
                   </Card>
                 </Col>
